@@ -8,7 +8,7 @@ class View:
         
         self.root = tk.Tk()
         self.root.title("Separador de Objeto")
-        self.root.geometry("400x200")
+        self.root.geometry("720x460")
         
         self.screens = {
             "select_image": self.select_image_screen,
@@ -62,7 +62,8 @@ class View:
         return file_path
     
     def get_points_screen(self):
-        self.group = "Fundo"
+        self.group = ["Fundo", "Objeto"]
+        self.current_group = 0
 
         self.get_points_frame = tk.Frame(self.root)
         self.get_points_frame.pack()
@@ -73,7 +74,7 @@ class View:
 
         self.get_points_label = tk.Label(
             self.get_points_frame,
-            text=f"Pegando pontos de: {self.group}"
+            text=f"Pegando pontos de: {self.group[self.current_group]}"
         )
         self.get_points_label.pack()
 
@@ -86,11 +87,34 @@ class View:
         self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_image)
         self.canvas.bind("<Button-1>", self.get_point)
+
+        previous_group_button = tk.Button(
+            self.get_points_frame,
+            text="Grupo Anterior",
+            command=lambda: self.get_point_group(value=-1)
+        )
+        previous_group_button.pack()
+        next_group_button = tk.Button(
+            self.get_points_frame,
+            text="Próximo Grupo",
+            command=lambda: self.get_point_group(value=1)
+        )
+        next_group_button.pack()
     
     def get_point(self, event):
         x, y = event.x, event.y
         pixel = self.image.getpixel((x, y))
-        print(pixel)
+        print(f"x: {x}, y: {y}, pixel:{pixel}")
+
+    def get_point_group(self, value: int):
+        if (value == 1):
+            if self.current_group + 1 < len(self.group):
+                self.current_group += 1
+                self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
+        else:
+            if self.current_group - 1 >= 0:
+                self.current_group -= 1
+                self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
 
     def run(self):
         self.select_image_screen()
