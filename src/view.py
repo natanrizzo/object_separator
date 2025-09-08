@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from PIL import Image, ImageTk
 
 class View:
     def __init__(self):
@@ -70,12 +71,26 @@ class View:
             self.switch_screen(self.get_points_frame, "select_image")
             return
 
-
         self.get_points_label = tk.Label(
             self.get_points_frame,
             text=f"Pegando pontos de: {self.group}"
         )
         self.get_points_label.pack()
+
+        self.canvas = tk.Canvas(self.get_points_frame)
+        self.canvas.pack()
+
+        self.image = Image.open(self.image)
+        self.tk_image = ImageTk.PhotoImage(self.image)
+
+        self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
+        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_image)
+        self.canvas.bind("<Button-1>", self.get_point)
+    
+    def get_point(self, event):
+        x, y = event.x, event.y
+        pixel = self.image.getpixel((x, y))
+        print(pixel)
 
     def run(self):
         self.select_image_screen()
