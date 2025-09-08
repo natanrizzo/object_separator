@@ -104,7 +104,7 @@ class View:
     def get_point(self, event):
         x, y = event.x, event.y
         pixel = self.image.getpixel((x, y))
-        print(f"x: {x}, y: {y}, pixel:{pixel}")
+        self.controller.save_pixel(pixel, self.current_group)
 
     def get_point_group(self, value: int):
         if (value == 1):

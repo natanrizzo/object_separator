@@ -8,3 +8,6 @@ class Controller:
     
     def set_model(self, model):
         self.model = model
+    
+    def save_pixel(self, pixel_rgb: list, group: int):
+        self.model.save_pixel(pixel_rgb, group)
