@@ -15,6 +15,7 @@ def main():
     model = Model()
 
     setup(view, controller, model)
+    view.run()
 
 if __name__ == "__main__":
     main()

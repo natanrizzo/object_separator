@@ -1,6 +1,83 @@
+import tkinter as tk
+from tkinter import filedialog
+
 class View:
     def __init__(self):
         self.controller = None
+        
+        self.root = tk.Tk()
+        self.root.title("Separador de Objeto")
+        self.root.geometry("400x200")
+        
+        self.screens = {
+            "select_image": self.select_image_screen,
+            "get_points": self.get_points_screen
+        }
+
+        self.image = None
     
     def set_controller(self, controller):
         self.controller = controller
+    
+    def switch_screen(self, current_screen: tk.Frame, new_screen: str):
+        current_screen.destroy()
+        screen = self.screens[new_screen]
+        if (screen):
+            screen()
+
+    def select_image_screen(self):
+        self.select_file_frame = tk.Frame(self.root)
+        self.select_file_frame.pack()
+
+        select_file_button = tk.Button(
+            self.select_file_frame, text="Selecione uma imagem.",
+            command=self.select_image
+        )
+        select_file_button.pack()
+
+        self.file_label = tk.Label(
+            self.select_file_frame,
+            text="Nenhum arquivo selecionado."
+        )
+        self.file_label.pack()
+
+        select_file_next_button = tk.Button(
+            self.select_file_frame, text="Próximo",
+            command= lambda: self.switch_screen(
+                self.select_file_frame, "get_points"
+                )
+            )
+        select_file_next_button.pack()
+
+    def select_image(self):
+        file_path = filedialog.askopenfile(filetypes=[
+            ("Image Files", "*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tif *.webp")
+        ]).name
+        
+        if file_path:
+            self.file_label.config(text=file_path)
+            self.image = file_path
+
+        return file_path
+    
+    def get_points_screen(self):
+        self.group = "Fundo"
+
+        self.get_points_frame = tk.Frame(self.root)
+        self.get_points_frame.pack()
+
+        if (self.image == None):
+            self.switch_screen(self.get_points_frame, "select_image")
+            return
+
+
+        self.get_points_label = tk.Label(
+            self.get_points_frame,
+            text=f"Pegando pontos de: {self.group}"
+        )
+        self.get_points_label.pack()
+
+    def run(self):
+        self.select_image_screen()
+
+        self.root.mainloop()

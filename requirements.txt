@@ -5,3 +5,6 @@ scikit-learn
 # Tratamento de Imagem
 opencv-python
 numpy
+
+# Interface
+tkinter
