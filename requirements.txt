@@ -1,0 +1,7 @@
+# KMeans
+matplotlib
+scikit-learn
+
+# Tratamento de Imagem
+opencv-python
+numpy
