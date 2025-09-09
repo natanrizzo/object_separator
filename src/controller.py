@@ -11,3 +11,6 @@ class Controller:
     
     def save_pixel(self, pixel_rgb: list, group: int):
         self.model.save_pixel(pixel_rgb, group)
+    
+    def separate_object(self, image_path):
+        self.model.separate_object(image_path)

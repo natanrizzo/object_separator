@@ -16,6 +16,7 @@ class View:
         }
 
         self.image = None
+        self.image_path = ""
     
     def set_controller(self, controller):
         self.controller = controller
@@ -57,7 +58,7 @@ class View:
         
         if file_path:
             self.file_label.config(text=file_path)
-            self.image = file_path
+            self.image_path = file_path
 
         return file_path
     
@@ -68,7 +69,7 @@ class View:
         self.get_points_frame = tk.Frame(self.root)
         self.get_points_frame.pack()
 
-        if (self.image == None):
+        if (self.image_path == None or self.image_path == ""):
             self.switch_screen(self.get_points_frame, "select_image")
             return
 
@@ -80,8 +81,8 @@ class View:
 
         self.canvas = tk.Canvas(self.get_points_frame)
         self.canvas.pack()
-
-        self.image = Image.open(self.image)
+        
+        self.image = Image.open(self.image_path)
         self.tk_image = ImageTk.PhotoImage(self.image)
 
         self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
@@ -110,11 +111,12 @@ class View:
         if (value == 1):
             if self.current_group + 1 < len(self.group):
                 self.current_group += 1
-                self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
+            else:
+                self.controller.separate_object(self.image_path)
         else:
             if self.current_group - 1 >= 0:
                 self.current_group -= 1
-                self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
+        self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
 
     def run(self):
         self.select_image_screen()
