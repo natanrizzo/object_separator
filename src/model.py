@@ -28,7 +28,7 @@ class Model:
         }
 
         train_kmeans = TrainKMeans()
-        kmeans = train_kmeans.run(data, True)['kmeans']
+        kmeans = train_kmeans.run(data)['kmeans']
 
         image = Image.open(image_path)
         image = image.convert("RGB")
@@ -38,7 +38,7 @@ class Model:
         pixel_formatter = PixelFormater()
         # Run image.
         
-        img_shape = (height, width, 3)
+        img_shape = (width, height, 3)
 
         background=np.zeros(shape=img_shape, dtype=np.uint8)
         object=np.zeros(shape=img_shape, dtype=np.uint8)
@@ -51,9 +51,9 @@ class Model:
                 group = kmeans.predict(form_pixel)
                 if (group == 0): # Background
                     background[x, y] = pixels[x, y]
-                    object[x, y] = (0, 0, 0)
+                    object[x, y] = (0, 0, 255)
                 else: # Object
-                    background[x, y] = (0, 0, 0)
+                    background[x, y] = (0, 0, 255)
                     object[x, y] = pixels[x, y]
                 x+=1
             y+=1
