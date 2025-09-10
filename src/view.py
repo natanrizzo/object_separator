@@ -82,7 +82,7 @@ class View:
         self.canvas = tk.Canvas(self.get_points_frame)
         self.canvas.pack()
         
-        self.image = Image.open(self.image_path)
+        self.image = Image.open(self.image_path).convert("RGB")
         self.tk_image = ImageTk.PhotoImage(self.image)
 
         self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
