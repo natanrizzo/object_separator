@@ -1,3 +1,8 @@
+from src.nodes.generate_img__node import GenerateImg
+from src.nodes.generate_img_clean_arrays__node import GenerateImgCleanArrays
+from src.nodes.normalize_img_array__node import NormalizeImgArray
+from src.nodes.predict_groups__node import PredictGroups
+from src.nodes.save_file__node import SaveFile
 from src.nodes.train_kmeans__node import TrainKMeans
 from src.nodes.pixel_formater__node import PixelFormater
 from PIL import Image
@@ -23,15 +28,30 @@ class Model:
         print(f"Model:\nPixels: {self.pixel_rgbs}\nGroups: {self.groups}")
     
     def separate_object(self, image_path):
-        data = {
+        data = { # Set up dictionary for the node chain.
             "X": self.pixel_rgbs,
-            "y": self.groups
+            "y": self.groups,
+            "image_path": image_path
         }
 
+        # Instantiate node chain.
         train_kmeans = TrainKMeans()
-        kmeans = train_kmeans.run(data)['kmeans']
+        normalize_img_array = NormalizeImgArray()
+        predict_groups = PredictGroups()
+        generate_img_clean_arrays = GenerateImgCleanArrays()
+        generate_img = GenerateImg()
+        save_file = SaveFile()
 
-        image = Image.open(image_path).convert("RGB")
+        # Set next nodes for each one of the nodes
+        train_kmeans.set_next_node(normalize_img_array)
+        normalize_img_array.set_next_node(predict_groups)
+        predict_groups.set_next_node(generate_img_clean_arrays)
+        generate_img_clean_arrays.set_next_node(generate_img)
+        generate_img.set_next_node(save_file)
+
+        # Run the chain of nodes
+        train_kmeans.run(data)
+
         ''' Old code
         pixels = image.load()
         width, height = image.size
@@ -60,23 +80,3 @@ class Model:
             y+=1
         '''
         
-        img_array = np.array(image)
-        h, w, c = img_array.shape
-
-        flat_pixels = img_array.reshape(-1, 3)
-
-        groups = kmeans.predict(flat_pixels)
-        mask = groups.reshape(h, w)
-
-        background_img = np.zeros_like(img_array)
-        object_img = np.zeros_like(img_array)
-
-        object_img[mask == 0] = img_array[mask == 0]
-        object_img[mask == 1] = (0, 0, 0)
-
-        background_img[mask == 1] = img_array[mask == 1]
-        background_img[mask == 0] = (0, 0, 0)
-        
-        os.makedirs("output", exist_ok=True)
-        Image.fromarray(background_img).save("output/background.jpeg")
-        Image.fromarray(object_img).save("output/object.jpeg")

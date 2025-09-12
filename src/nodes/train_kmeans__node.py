@@ -10,4 +10,4 @@ class TrainKMeans(Node):
         kmeans.fit(caracteristics, classes)
         data["kmeans"] = kmeans
 
-        return data;
+        return data

@@ -120,6 +120,11 @@ class View:
             if self.current_group - 1 >= 0:
                 self.current_group -= 1
         self.get_points_label.config(text=f"Pegando pontos de: {self.group[self.current_group]}")
+    
+    def show_image(self, image_path):
+        self.image = Image.open(image_path).convert("RGB")
+        self.tk_image = ImageTk.PhotoImage(self.image)
+        self.canvas.config(width=self.tk_image.width(), height=self.tk_image.height())
 
     def run(self):
         self.select_image_screen()
