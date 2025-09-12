@@ -52,9 +52,9 @@ class Model:
                 group = kmeans.predict(form_pixel)
                 if (group == 0): # Background
                     background_img[y, x] = pixels[x, y]
-                    object_img[y, x] = (0, 0, 255)
+                    object_img[y, x] = (0, 0, 0)
                 else: # Object
-                    background_img[y, x] = (0, 0, 255)
+                    background_img[y, x] = (0, 0, 0)
                     object_img[y, x] = pixels[x, y]
                 x+=1
             y+=1
@@ -72,10 +72,10 @@ class Model:
         object_img = np.zeros_like(img_array)
 
         object_img[mask == 0] = img_array[mask == 0]
-        object_img[mask == 1] = (255, 0, 0)
+        object_img[mask == 1] = (0, 0, 0)
 
         background_img[mask == 1] = img_array[mask == 1]
-        background_img[mask == 0] = (255, 0, 0)
+        background_img[mask == 0] = (0, 0, 0)
         
         os.makedirs("output", exist_ok=True)
         Image.fromarray(background_img).save("output/background.jpeg")

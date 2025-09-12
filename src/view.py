@@ -106,6 +106,9 @@ class View:
         x, y = event.x, event.y
         pixel = self.image.getpixel((x, y))
         self.controller.save_pixel(pixel, self.current_group)
+        r = 3 # Dot radius
+        color = "red" if self.current_group == 0 else "blue"
+        self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=color, outline=color)
 
     def get_point_group(self, value: int):
         if (value == 1):
