@@ -5,9 +5,7 @@ from src.nodes.predict_groups__node import PredictGroups
 from src.nodes.save_file__node import SaveFile
 from src.nodes.train_kmeans__node import TrainKMeans
 from src.nodes.pixel_formater__node import PixelFormater
-from PIL import Image
-import numpy as np
-import os
+
 
 class Model:
     def __init__(self):
@@ -51,6 +49,8 @@ class Model:
 
         # Run the chain of nodes
         train_kmeans.run(data)
+
+        self.controller.show_images(["output/background.jpeg", "output/object.jpeg"])
 
         ''' Old code
         pixels = image.load()

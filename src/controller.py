@@ -14,3 +14,6 @@ class Controller:
     
     def separate_object(self, image_path):
         self.model.separate_object(image_path)
+    
+    def show_images(self, images: list[str]):
+        self.view.set_generated_images(images)
