@@ -107,6 +107,13 @@ class View:
         )
         self.next_group_button.pack()
 
+        go_back_button = tk.Button(
+            self.get_points_frame,
+            text="< Voltar",
+            command=lambda: self.switch_screen("select_image")
+        )
+        go_back_button.pack()
+
         self.current_screen = self.get_points_frame
     
     def get_point(self, event):
@@ -151,6 +158,13 @@ class View:
         obj_label = tk.Label(self.show_generated_images_frame, text="Imagens Geradas")
         obj_label.pack()
 
+        go_back_button = tk.Button(
+            self.show_generated_images_frame,
+            text="< Voltar",
+            command=lambda: self.switch_screen("get_points")
+        )
+        go_back_button.pack()
+
         self.generated_tk_images = []
 
         for path in self.generated_images:
@@ -161,6 +175,8 @@ class View:
             label.pack(pady=5)
 
         self.current_screen = self.show_generated_images_frame
+
+        
 
 
     def run(self):
