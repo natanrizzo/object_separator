@@ -7,8 +7,10 @@ class SaveFile(Node):
     def process(self, data):
         background_img = data["background_img"]
         object_img = data["object_img"]
+        morphed_img = data["morphed_img"]
         
         os.makedirs("output", exist_ok=True)
 
         Image.fromarray(background_img).save("output/background.jpeg")
         Image.fromarray(object_img).save("output/object.jpeg")
+        Image.fromarray(morphed_img).save("output/morphed.jpeg")

@@ -5,6 +5,7 @@ from src.nodes.predict_groups__node import PredictGroups
 from src.nodes.save_file__node import SaveFile
 from src.nodes.train_kmeans__node import TrainKMeans
 from src.nodes.pixel_formater__node import PixelFormater
+from src.nodes.morphological_operations__node import MorphologialOperations
 
 
 class Model:
@@ -36,6 +37,7 @@ class Model:
         train_kmeans = TrainKMeans()
         normalize_img_array = NormalizeImgArray()
         predict_groups = PredictGroups()
+        morphological_operations = MorphologialOperations()
         generate_img_clean_arrays = GenerateImgCleanArrays()
         generate_img = GenerateImg()
         save_file = SaveFile()
@@ -43,14 +45,19 @@ class Model:
         # Set next nodes for each one of the nodes
         train_kmeans.set_next_node(normalize_img_array)
         normalize_img_array.set_next_node(predict_groups)
-        predict_groups.set_next_node(generate_img_clean_arrays)
+        predict_groups.set_next_node(morphological_operations)
+        morphological_operations.set_next_node(generate_img_clean_arrays)
         generate_img_clean_arrays.set_next_node(generate_img)
         generate_img.set_next_node(save_file)
 
         # Run the chain of nodes
         train_kmeans.run(data)
 
-        self.controller.show_images(["output/background.jpeg", "output/object.jpeg"])
+        self.controller.show_images([
+            "output/background.jpeg",
+            "output/object.jpeg",
+            "output/morphed.jpeg"
+            ])
 
         ''' Old code
         pixels = image.load()

@@ -8,5 +8,6 @@ class GenerateImgCleanArrays(Node):
 
         data["background_img"] = np.zeros_like(img_array)
         data["object_img"] = np.zeros_like(img_array)
+        data["morphed_img"] = np.zeros_like(img_array)
 
         return data

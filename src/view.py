@@ -152,27 +152,49 @@ class View:
         self.switch_screen("show_generated_images")
 
     def show_generated_images_screen(self):
-        self.show_generated_images_frame = tk.Frame(self.root)
-        self.show_generated_images_frame.pack()
+        IMAGE_WIDTH = 500
+        IMAGE_HEIGHT = 260
+        NUM_COLUMNS = 3
 
-        obj_label = tk.Label(self.show_generated_images_frame, text="Imagens Geradas")
-        obj_label.pack()
+        self.show_generated_images_frame = tk.Frame(self.root)
+        self.show_generated_images_frame.pack(fill="both", expand=True)
+
+        self.show_generated_images_frame.grid_rowconfigure(1, weight=1)
+        self.show_generated_images_frame.grid_columnconfigure(0, weight=1)
+        
+        control_frame = tk.Frame(self.show_generated_images_frame)
+        control_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=5)
+
+        obj_label = tk.Label(control_frame, text="Imagens Geradas")
+        obj_label.pack(side="left")
 
         go_back_button = tk.Button(
-            self.show_generated_images_frame,
+            control_frame,
             text="< Voltar",
             command=lambda: self.switch_screen("get_points")
         )
-        go_back_button.pack()
+        go_back_button.pack(side="right")
+
+        images_container = tk.Frame(self.show_generated_images_frame)
+        images_container.grid(row=1, column=0, sticky="nsew")
 
         self.generated_tk_images = []
 
-        for path in self.generated_images:
+        for index, path in enumerate(self.generated_images):
             image = Image.open(path).convert("RGB")
+            image = image.resize((IMAGE_WIDTH, IMAGE_HEIGHT), Image.Resampling.LANCZOS)
+            
             tk_image = ImageTk.PhotoImage(image)
             self.generated_tk_images.append(tk_image)
-            label = tk.Label(self.show_generated_images_frame, image=tk_image)
-            label.pack(pady=5)
+            
+            row = index // NUM_COLUMNS
+            column = index % NUM_COLUMNS
+            
+            label = tk.Label(images_container, image=tk_image)
+            label.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+
+        for i in range(NUM_COLUMNS):
+            images_container.grid_columnconfigure(i, weight=1)
 
         self.current_screen = self.show_generated_images_frame
 
